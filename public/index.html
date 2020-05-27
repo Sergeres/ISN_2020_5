@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <link rel="icon" href="<%= BASE_URL %>favicon.ico">
+	<link rel="manifest" crossorigin="use-credentials" href="manifest.json">
+    <title><%= htmlWebpackPlugin.options.title %></title>
+  </head>
+  <body onload="setTimeout(notifSet(), getRandomInt(1000,10000)), localStorage.clear();">
+    <div id="app">
+      <router-view></router-view>
+
+    </div>
+    <!-- built files will be auto injected -->
+  </body>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        this.navigator.serviceWorker.register('/sw.js');
+      });
+    }
+    function notifyMe () {
+      localStorage.clear();
+      const dictionary = ["Уже год подстригаюсь все отлично. Самое главное быстро не как в дорогих салонах там ну очень долго стригут минут по 30-40 создают вид сервиса. Деньги не главное, но сэкономленное время для меня самое важное.",
+        "Воровского 104, заехали подстричь ребенка! Начиная с админитратора (екатерина) не \"здрасте не н@срать\" а про мастера вобще молчу. Итог, подстригли очень плохо, туда больше не ногой.", "Очень хорошая парикмахерская, отличные мастера,все быстро и классно", "Стригут всегда по разному,одна девушка подстригла хорошо,но через недельку обнаружила ее небрежность,торчала длинная прядь волос из коротких,чаще края крамсают а не равняют,смотря в какой салон обратиться",
+        "Понравилось, как подстригли. Мастер девушка с дредами. Расчески обрабатывает, все чисто, работет аккуратно. И мастер Елена, просто ужас!!! Полная противоположность!"];
+      var textnotification = dictionary[getRandomInt(0,4)];
+      var notification = new Notification ("Светлана, Здравствуйте!", {
+        tag: "ache-mail",
+        body : textnotification,
+        icon : "https://sun1-95.userapi.com/HnhHCRxk3IcD8uKmsrEJJ3rb2enwmROcB0JVCg/2nl5t-yRVtQ.jpg"
+      });
+      localStorage.setItem('text', textnotification);
+      console.log(localStorage.getItem('text'));
+    }
+
+    function notifSet () {
+      if (!("Notification" in window))
+        alert ("Ваш браузер не поддерживает уведомления.");
+      else if (Notification.permission === "granted")
+        setInterval(notifyMe, 5000);
+      else if (Notification.permission !== "denied") {
+        Notification.requestPermission (function (permission) {
+          if (!('permission' in Notification))
+            Notification.permission = permission;
+          if (permission === "granted")
+            setInterval(notifyMe, 5000);
+        });
+      }
+    }
+    function getRandomInt() {
+      return Math.floor(Math.random() * Math.floor(5));
+    }
+
+  </script>
+  </html>
